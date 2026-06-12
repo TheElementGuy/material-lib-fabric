@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,14 +26,14 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 
 	private final String MOD_ID;
 
-	protected TEGMatLibRecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
+	public TEGMatLibRecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 		MOD_ID = materials.getModID();
 	}
 
 	@Override
-	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+	protected @NotNull RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
 
 		return new RecipeProvider(registries, output) {
 			@Override
