@@ -4,6 +4,7 @@ import com.github.theelementguy.tegmatlibf.core.SingleOrMultiple;
 import com.github.theelementguy.tegmatlibf.util.OrePlacement;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -248,7 +249,10 @@ public class OreGenConfig {
 	}
 
 	public void addPlacedFeatureEntry(FabricDynamicRegistryProvider.Entries entries, ResourceKey<PlacedFeature> featureKey, ResourceKey<ConfiguredFeature<?, ?>> configKey) {
-		entries.add(featureKey, new PlacedFeature(entries.getLookups().lookup(Registries.CONFIGURED_FEATURE).get().getOrThrow(configKey), (RARITY == OreRarity.COMMON) ? OrePlacement.commonOrePlacement(PLACEMENT_INT, PLACEMENT) : OrePlacement.rareOrePlacement(PLACEMENT_INT, PLACEMENT)));
+
+		HolderLookup<ConfiguredFeature<?, ?>> lookup = entries.getLookups().lookup(Registries.CONFIGURED_FEATURE).orElseThrow(() -> new IllegalStateException("No lookups for configured feature."));
+
+		entries.add(featureKey, new PlacedFeature(lookup.getOrThrow(configKey), (RARITY == OreRarity.COMMON) ? OrePlacement.commonOrePlacement(PLACEMENT_INT, PLACEMENT) : OrePlacement.rareOrePlacement(PLACEMENT_INT, PLACEMENT)));
 	}
 
 	public Predicate<BiomeSelectionContext> getPredicate() {
