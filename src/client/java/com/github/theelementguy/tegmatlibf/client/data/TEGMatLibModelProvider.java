@@ -198,6 +198,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 			case CUBE -> TexturedModel.CUBE;
 			case CUBE_TOP -> TexturedModel.CUBE_TOP;
 			case CUBE_TOP_BOTTOM -> TexturedModel.CUBE_TOP_BOTTOM;
+			case COLUMN -> TexturedModel.COLUMN;
 		};
 	}
 }
