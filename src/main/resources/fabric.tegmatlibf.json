@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "tegmatlibf",
 	"version": "${version}",
 	"name": "Material Lib",
 	"description": "Port of TEG Mat Lib to Fabric: adding materials in a non-repetive way.",
