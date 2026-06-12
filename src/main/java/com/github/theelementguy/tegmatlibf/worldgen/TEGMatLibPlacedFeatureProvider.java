@@ -2,6 +2,7 @@ package com.github.theelementguy.tegmatlibf.worldgen;
 
 import com.github.theelementguy.tegmatlibf.core.FullyConfiguredMaterialHolder;
 import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
@@ -16,12 +17,10 @@ public class TEGMatLibPlacedFeatureProvider {
 		MATERIALS = materials::getMaterials;
 	}
 
-	public void bootstrap(BootstrapContext<PlacedFeature> context) {
-
-		for (MaterialConfiguration config : MATERIALS.get()) {
-			config.registerPlacedFeatures(context);
+	public void addEntries(FabricDynamicRegistryProvider.Entries entries) {
+		for (MaterialConfiguration m : MATERIALS.get()) {
+			m.addPlacedFeatureEntries(entries);
 		}
-
 	}
 
 }

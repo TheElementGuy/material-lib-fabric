@@ -2,6 +2,7 @@ package com.github.theelementguy.tegmatlibf.trim;
 
 import com.github.theelementguy.tegmatlibf.core.FullyConfiguredMaterialHolder;
 import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
 
@@ -16,12 +17,10 @@ public class TEGMatLibTrimMaterialProvider {
 		MATERIALS = materials::getMaterials;
 	}
 
-	public void bootstrap(BootstrapContext<TrimMaterial> context) {
-
+	public void addEntries(FabricDynamicRegistryProvider.Entries entries) {
 		for (MaterialConfiguration config : MATERIALS.get()) {
-			config.bootstrapTrimMaterial(context);
+			config.addTrimMaterialEntry(entries);
 		}
-
 	}
 
 }

@@ -17,7 +17,7 @@ public class TEGMatLibBiomeModifier {
 	public void run() {
 
 		for (MaterialConfiguration config : MATERIALS.get()) {
-			config.registerBiomeModifiers();
+			config.applyBiomeModifiers();
 		}
 
 	}
