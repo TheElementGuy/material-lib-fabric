@@ -14,5 +14,10 @@
 		"minecraft": "~26.1.2",
 		"java": ">=25",
 		"fabric-api": "*"
-	}
+	},
+  "entrypoints": {
+    "main": [
+      "com.github.theelementguy.tegmatlibf.Initializer"
+    ]
+  }
 }

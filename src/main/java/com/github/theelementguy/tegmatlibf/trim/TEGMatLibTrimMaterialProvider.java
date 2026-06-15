@@ -23,4 +23,12 @@ public class TEGMatLibTrimMaterialProvider {
 		}
 	}
 
+	public void bootstrap(BootstrapContext<TrimMaterial> context) {
+
+		for (MaterialConfiguration config : MATERIALS.get()) {
+			config.bootstrapTrimMaterial(context);
+		}
+
+	}
+
 }
