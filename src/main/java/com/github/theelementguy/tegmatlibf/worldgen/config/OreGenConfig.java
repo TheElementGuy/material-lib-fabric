@@ -244,6 +244,14 @@ public class OreGenConfig {
 		return () -> new OreGenConfig(OreGenSize.EXTRA, HeightRangePlacement.triangle(VerticalAnchor.absolute(lowerBound), VerticalAnchor.absolute(upperBound)), veinSize, discardOnAirChance, OreRarity.RARE, chunksPerVein, biome);
 	}
 
+	public void registerConfiguredFeature(BootstrapContext<ConfiguredFeature<?, ?>> context, List<OreConfiguration.TargetBlockState> ores, ResourceKey<ConfiguredFeature<?, ?>> key) {
+		context.register(key, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ores, this.SIZE_INT, this.DISCARD_ON_AIR_CHANCE)));
+	}
+
+	public void registerPlacedFeature(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> featureKey, ResourceKey<ConfiguredFeature<?, ?>> configKey) {
+		context.register(featureKey, new PlacedFeature(context.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(configKey), (RARITY == OreRarity.COMMON) ? OrePlacement.commonOrePlacement(PLACEMENT_INT, PLACEMENT) : OrePlacement.rareOrePlacement(PLACEMENT_INT, PLACEMENT)));
+	}
+
 	public void addConfiguredFeatureEntry(FabricDynamicRegistryProvider.Entries entries, List<OreConfiguration.TargetBlockState> ores, ResourceKey<ConfiguredFeature<?, ?>> key) {
 		entries.add(key, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ores, this.SIZE_INT, this.DISCARD_ON_AIR_CHANCE)));
 	}

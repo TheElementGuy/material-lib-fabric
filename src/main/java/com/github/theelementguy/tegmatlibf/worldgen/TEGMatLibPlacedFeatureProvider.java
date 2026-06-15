@@ -23,4 +23,12 @@ public class TEGMatLibPlacedFeatureProvider {
 		}
 	}
 
+	public void bootstrap(BootstrapContext<PlacedFeature> context) {
+
+		for (MaterialConfiguration config : MATERIALS.get()) {
+			config.registerPlacedFeatures(context);
+		}
+
+	}
+
 }

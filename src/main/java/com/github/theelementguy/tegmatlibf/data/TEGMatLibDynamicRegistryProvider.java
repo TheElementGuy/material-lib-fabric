@@ -8,6 +8,7 @@ import com.github.theelementguy.tegmatlibf.worldgen.TEGMatLibPlacedFeatureProvid
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -29,9 +30,9 @@ public class TEGMatLibDynamicRegistryProvider extends FabricDynamicRegistryProvi
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, Entries entries) {
-		trims.addEntries(entries);
-		configuredFeatures.addEntries(entries);
-		placedFeatures.addEntries(entries);
+		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
+		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
+		entries.addAll(registries.lookupOrThrow(Registries.TRIM_MATERIAL));
 	}
 
 	@Override

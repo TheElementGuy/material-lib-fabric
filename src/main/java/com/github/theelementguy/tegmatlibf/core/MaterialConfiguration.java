@@ -215,6 +215,20 @@ public abstract class MaterialConfiguration {
 		});
 	}
 
+	public void registerConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+		ORE_GEN_CONFIGS.getSmall().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getSmall().get());});
+		ORE_GEN_CONFIGS.getMedium().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getMedium().get());});
+		ORE_GEN_CONFIGS.getLarge().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getLarge().get());});
+		ORE_GEN_CONFIGS.getExtra().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getExtra().get());});
+	}
+
+	public void registerPlacedFeatures(BootstrapContext<PlacedFeature> context) {
+		ORE_GEN_CONFIGS.getSmall().ifPresent((oreConfig) -> {oreConfig.registerPlacedFeature(context, PLACED_FEATURE_KEYS.getSmall().get(), CONFIGURED_FEATURE_KEYS.getSmall().get());});
+		ORE_GEN_CONFIGS.getMedium().ifPresent((oreConfig) -> {oreConfig.registerPlacedFeature(context, PLACED_FEATURE_KEYS.getMedium().get(), CONFIGURED_FEATURE_KEYS.getMedium().get());});
+		ORE_GEN_CONFIGS.getLarge().ifPresent((oreConfig) -> {oreConfig.registerPlacedFeature(context, PLACED_FEATURE_KEYS.getLarge().get(), CONFIGURED_FEATURE_KEYS.getLarge().get());});
+		ORE_GEN_CONFIGS.getExtra().ifPresent((oreConfig) -> {oreConfig.registerPlacedFeature(context, PLACED_FEATURE_KEYS.getExtra().get(), CONFIGURED_FEATURE_KEYS.getExtra().get());});
+	}
+
 	protected Item registerSimpleItem(String name) {
 		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new Item(DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(name, MOD_ID))));
 	}

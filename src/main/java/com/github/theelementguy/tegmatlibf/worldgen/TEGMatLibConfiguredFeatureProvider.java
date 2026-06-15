@@ -17,10 +17,12 @@ public class TEGMatLibConfiguredFeatureProvider {
 		MATERIALS = materials::getMaterials;
 	}
 
-	public void addEntries(FabricDynamicRegistryProvider.Entries entries) {
-		for (MaterialConfiguration m : MATERIALS.get()) {
-			m.addConfiguredFeatureEntries(entries);
+	public void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+
+		for (MaterialConfiguration config : MATERIALS.get()) {
+			config.registerConfiguredFeatures(context);
 		}
+
 	}
 
 }
