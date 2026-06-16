@@ -26,6 +26,7 @@ public class TEGMatLibCreativeModeTabFiller {
 				case IRON -> {
 					IronTypeMaterialConfiguration ironMatConfig = (IronTypeMaterialConfiguration) m;
 					TEGMatLibUtil.inventoryAddAfter(ironMatConfig.getRawItem(), TEGMatLibUtil.getItemFromKey("raw_" + ironMatConfig.getRawBefore(), modID), currentTab);
+					TEGMatLibUtil.inventoryAddAfter(ironMatConfig.getNugget(), TEGMatLibUtil.getItemFromKey(ironMatConfig.getRawBefore() + "_nugget", modID), currentTab);
 				}
 				case CUBIC_ZIRCONIA -> {
 					CubicZirconiaTypeMaterialConfiguration cubicMatConfig = (CubicZirconiaTypeMaterialConfiguration) m;
@@ -34,6 +35,7 @@ public class TEGMatLibCreativeModeTabFiller {
 				case END_IRON -> {
 					EndIronTypeMaterialConfiguration endIronMatConfig = (EndIronTypeMaterialConfiguration) m;
 					TEGMatLibUtil.inventoryAddAfter(endIronMatConfig.getRawItem(), TEGMatLibUtil.getItemFromKey("raw_" + endIronMatConfig.getRawBefore(), modID), currentTab);
+					TEGMatLibUtil.inventoryAddAfter(endIronMatConfig.getNugget(), TEGMatLibUtil.getItemFromKey(endIronMatConfig.getRawBefore() + "_nugget", modID), currentTab);
 				}
 			}
 		}
