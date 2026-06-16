@@ -45,175 +45,175 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 
 	protected void addMaterial(MaterialConfiguration material) {
 		
-		valueLookupBuilder(ConventionalBlockTags.STORAGE_BLOCKS).add(material.getBaseBlock());
+		builder(ConventionalBlockTags.STORAGE_BLOCKS).add(material.getBaseBlock().properties().blockId());
 		MineabilityTier tier = (material.getMineabilityLevel() == MineabilityTier.DEFAULT) ? getMineability(material.getMiningLevel()) : material.getMineabilityLevel();
 		switch (material.getType()) {
 			case IRON -> {
 				IronTypeMaterialConfiguration mat = (IronTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				}
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre());
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().properties().blockId());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().properties().blockId());
 			}
 			case DIAMOND -> {
 				DiamondTypeMaterialConfiguration mat = (DiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				}
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre());
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().properties().blockId());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().properties().blockId());
 			}
 			case CUBIC_ZIRCONIA -> {
 				CubicZirconiaTypeMaterialConfiguration mat = (CubicZirconiaTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre(), mat.getDeepslateOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 				}
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre());
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().properties().blockId());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().properties().blockId());
 			}
 			case NETHER_DIAMOND -> {
 				NetherDiamondTypeMaterialConfiguration mat = (NetherDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getNetherOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getNetherOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getNetherOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getNetherOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getNetherOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getNetherOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getNetherOre().properties().blockId());
 				}
-				valueLookupBuilder(ConventionalBlockTags.ORES_IN_GROUND_NETHERRACK).add(mat.getNetherOre());
+				builder(ConventionalBlockTags.ORES_IN_GROUND_NETHERRACK).add(mat.getNetherOre().properties().blockId());
 			}
 			case END_DIAMOND -> {
 				EndDiamondTypeMaterialConfiguration mat = (EndDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getEndOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getEndOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().properties().blockId());
 				}
 			}
 			case END_IRON -> {
 				EndIronTypeMaterialConfiguration mat = (EndIronTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().properties().blockId());
 				}
 			}
 			case SAND_DIAMOND -> {
 				SandDiamondTypeMaterialConfiguration mat = (SandDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock(), mat.getSandOre(), mat.getGravelOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock(), mat.getSandOre(), mat.getGravelOre());
-					valueLookupBuilder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock(), mat.getSandOre(), mat.getGravelOre());
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
+					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
+					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					valueLookupBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock(), mat.getSandOre(), mat.getGravelOre());
-					valueLookupBuilder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock(), mat.getSandOre(), mat.getGravelOre());
-					valueLookupBuilder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					valueLookupBuilder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
+					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
+					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
 				}
 				if (mat.isSingleOre()) {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre(), mat.getGravelOre());
+					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
 				} else {
-					valueLookupBuilder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getSandOre(), mat.getGravelOre());
+					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
 				}
 			}
 		}

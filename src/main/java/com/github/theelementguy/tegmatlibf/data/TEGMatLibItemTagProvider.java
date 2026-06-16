@@ -26,46 +26,46 @@ public class TEGMatLibItemTagProvider extends FabricTagsProvider.ItemTagsProvide
 	protected void addTags(HolderLookup.@NotNull Provider provider) {
 
 		for (MaterialConfiguration config : MATERIALS.get()) {
-			valueLookupBuilder(ItemTags.TRIM_MATERIALS).add(config.getBaseItem());
-			valueLookupBuilder(ItemTags.SWORDS).add(config.getSword());
-			valueLookupBuilder(ItemTags.AXES).add(config.getAxe());
-			valueLookupBuilder(ItemTags.PICKAXES).add(config.getPickaxe());
-			valueLookupBuilder(ItemTags.SHOVELS).add(config.getShovel());
-			valueLookupBuilder(ItemTags.HOES).add(config.getHoe());
-			valueLookupBuilder(ItemTags.SPEARS).add(config.getSpear());
-			valueLookupBuilder(config.getRepairables()).add(config.getBaseItem());
-			valueLookupBuilder(ItemTags.HEAD_ARMOR).add(config.getHelmet());
-			valueLookupBuilder(ItemTags.CHEST_ARMOR).add(config.getChestplate());
-			valueLookupBuilder(ItemTags.LEG_ARMOR).add(config.getLeggings());
-			valueLookupBuilder(ItemTags.FOOT_ARMOR).add(config.getBoots());
-			valueLookupBuilder(ConventionalItemTags.MELEE_WEAPON_TOOLS).add(config.getSword(), config.getAxe(), config.getSpear());
-			valueLookupBuilder(ConventionalItemTags.MINING_TOOL_TOOLS).add(config.getPickaxe());
+			builder(ItemTags.TRIM_MATERIALS).add(config.getBaseItem().builtInRegistryHolder().key());
+			builder(ItemTags.SWORDS).add(config.getSword().builtInRegistryHolder().key());
+			builder(ItemTags.AXES).add(config.getAxe().builtInRegistryHolder().key());
+			builder(ItemTags.PICKAXES).add(config.getPickaxe().builtInRegistryHolder().key());
+			builder(ItemTags.SHOVELS).add(config.getShovel().builtInRegistryHolder().key());
+			builder(ItemTags.HOES).add(config.getHoe().builtInRegistryHolder().key());
+			builder(ItemTags.SPEARS).add(config.getSpear().builtInRegistryHolder().key());
+			builder(config.getRepairables()).add(config.getBaseItem().builtInRegistryHolder().key());
+			builder(ItemTags.HEAD_ARMOR).add(config.getHelmet().builtInRegistryHolder().key());
+			builder(ItemTags.CHEST_ARMOR).add(config.getChestplate().builtInRegistryHolder().key());
+			builder(ItemTags.LEG_ARMOR).add(config.getLeggings().builtInRegistryHolder().key());
+			builder(ItemTags.FOOT_ARMOR).add(config.getBoots().builtInRegistryHolder().key());
+			builder(ConventionalItemTags.MELEE_WEAPON_TOOLS).add(config.getSword().builtInRegistryHolder().key(), config.getAxe().builtInRegistryHolder().key(), config.getSpear().builtInRegistryHolder().key());
+			builder(ConventionalItemTags.MINING_TOOL_TOOLS).add(config.getPickaxe().builtInRegistryHolder().key());
 			if (config.getHorseArmor().isUsing()) {
-				valueLookupBuilder(ConventionalItemTags.HORSE_ARMORS).add(config.getHorseArmor().get().get().asItem());
+				builder(ConventionalItemTags.HORSE_ARMORS).add(config.getHorseArmor().get().get().asItem().builtInRegistryHolder().key());
 			}
 			if (config.getNautilusArmor().isUsing()) {
-				valueLookupBuilder(ConventionalItemTags.NAUTILUS_ARMORS).add(config.getNautilusArmor().get().get().asItem());
+				builder(ConventionalItemTags.NAUTILUS_ARMORS).add(config.getNautilusArmor().get().get().asItem().builtInRegistryHolder().key());
 			}
 			switch (config.getType()) {
 				case DIAMOND, NETHER_DIAMOND, END_DIAMOND, SAND_DIAMOND -> {
-					valueLookupBuilder(ConventionalItemTags.GEMS).add(config.getBaseItem());
+					builder(ConventionalItemTags.GEMS).add(config.getBaseItem().builtInRegistryHolder().key());
 				}
 				case IRON -> {
 					IronTypeMaterialConfiguration mat = (IronTypeMaterialConfiguration) config;
-					valueLookupBuilder(ConventionalItemTags.INGOTS).add(mat.getBaseItem());
-					valueLookupBuilder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem());
-					valueLookupBuilder(ConventionalItemTags.NUGGETS).add(mat.getNugget());
+					builder(ConventionalItemTags.INGOTS).add(mat.getBaseItem().builtInRegistryHolder().key());
+					builder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem().builtInRegistryHolder().key());
+					builder(ConventionalItemTags.NUGGETS).add(mat.getNugget().builtInRegistryHolder().key());
 				}
 				case CUBIC_ZIRCONIA -> {
 					CubicZirconiaTypeMaterialConfiguration mat = (CubicZirconiaTypeMaterialConfiguration) config;
-					valueLookupBuilder(ConventionalItemTags.GEMS).add(mat.getBaseItem());
-					valueLookupBuilder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem());
+					builder(ConventionalItemTags.GEMS).add(mat.getBaseItem().builtInRegistryHolder().key());
+					builder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem().builtInRegistryHolder().key());
 				}
 				case END_IRON -> {
 					EndIronTypeMaterialConfiguration mat = (EndIronTypeMaterialConfiguration) config;
-					valueLookupBuilder(ConventionalItemTags.INGOTS).add(mat.getBaseItem());
-					valueLookupBuilder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem());
-					valueLookupBuilder(ConventionalItemTags.NUGGETS).add(mat.getNugget());
+					builder(ConventionalItemTags.INGOTS).add(mat.getBaseItem().builtInRegistryHolder().key());
+					builder(ConventionalItemTags.RAW_MATERIALS).add(mat.getRawItem().builtInRegistryHolder().key());
+					builder(ConventionalItemTags.NUGGETS).add(mat.getNugget().builtInRegistryHolder().key());
 				}
 			}
 		}
