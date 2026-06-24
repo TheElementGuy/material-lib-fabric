@@ -1,7 +1,7 @@
 package com.github.theelementguy.tegmatlibf.client.data;
 
 import com.github.theelementguy.tegmatlibf.core.FullyConfiguredMaterialHolder;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.models.EquipmentAssetProvider;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.data.CachedOutput;
@@ -24,7 +24,7 @@ public class TEGMatLibEquipmentAssetProvider extends EquipmentAssetProvider {
 
 	protected final Supplier<List<MaterialConfiguration>> MATERIALS;
 
-	public TEGMatLibEquipmentAssetProvider(FabricPackOutput output, FullyConfiguredMaterialHolder materials) {
+	public TEGMatLibEquipmentAssetProvider(FabricDataOutput output, FullyConfiguredMaterialHolder materials) {
 		super(output);
 		pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "equipment");
 		MATERIALS = materials::getMaterials;

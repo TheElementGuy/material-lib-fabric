@@ -2,7 +2,7 @@ package com.github.theelementguy.tegmatlibf.util;
 
 import com.github.theelementguy.tegmatlibf.core.tier.MineabilityTier;
 import com.github.theelementguy.tegmatlibf.core.tier.MiningTier;
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -127,15 +127,15 @@ public class TEGMatLibUtil {
 	}
 
 	public static void inventoryAddAfter(Item item, Item referenceItem, ResourceKey<CreativeModeTab> tab) {
-		CreativeModeTabEvents.modifyOutputEvent(tab).register(c -> c.insertAfter(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
+		ItemGroupEvents.modifyEntriesEvent(tab).register(c -> c.addAfter(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
 	}
 
 	public static void inventoryAddAfter(Block item, Block referenceItem, ResourceKey<CreativeModeTab> tab) {
-		CreativeModeTabEvents.modifyOutputEvent(tab).register(c -> c.insertAfter(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
+		ItemGroupEvents.modifyEntriesEvent(tab).register(c -> c.addAfter(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
 	}
 
 	public static void inventoryAddBefore(Item item, Item referenceItem, ResourceKey<CreativeModeTab> tab) {
-		CreativeModeTabEvents.modifyOutputEvent(tab).register(c -> c.insertBefore(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
+		ItemGroupEvents.modifyEntriesEvent(tab).register(c -> c.addBefore(new ItemStack(referenceItem, 1), new ItemStack(item, 1)));
 	}
 
 	public static ResourceKey<TrimMaterial> createTrimMaterialResourceKey(String name, String modId) {

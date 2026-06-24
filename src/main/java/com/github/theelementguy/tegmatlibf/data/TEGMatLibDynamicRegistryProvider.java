@@ -5,7 +5,7 @@ import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
 import com.github.theelementguy.tegmatlibf.trim.TEGMatLibTrimMaterialProvider;
 import com.github.theelementguy.tegmatlibf.worldgen.TEGMatLibConfiguredFeatureProvider;
 import com.github.theelementguy.tegmatlibf.worldgen.TEGMatLibPlacedFeatureProvider;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -20,7 +20,7 @@ public class TEGMatLibDynamicRegistryProvider extends FabricDynamicRegistryProvi
 	private final TEGMatLibConfiguredFeatureProvider configuredFeatures;
 	private final TEGMatLibPlacedFeatureProvider placedFeatures;
 
-	public TEGMatLibDynamicRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, FullyConfiguredMaterialHolder materials, TEGMatLibTrimMaterialProvider trims, TEGMatLibConfiguredFeatureProvider configuredFeatures, TEGMatLibPlacedFeatureProvider placedFeatures) {
+	public TEGMatLibDynamicRegistryProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, FullyConfiguredMaterialHolder materials, TEGMatLibTrimMaterialProvider trims, TEGMatLibConfiguredFeatureProvider configuredFeatures, TEGMatLibPlacedFeatureProvider placedFeatures) {
 		super(output, registriesFuture);
 		MATERIALS = materials;
 		this.trims = trims;

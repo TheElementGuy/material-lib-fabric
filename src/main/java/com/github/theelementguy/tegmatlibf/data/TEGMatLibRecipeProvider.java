@@ -1,7 +1,7 @@
 package com.github.theelementguy.tegmatlibf.data;
 
 import com.github.theelementguy.tegmatlibf.core.*;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -26,7 +26,7 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 
 	private final String MOD_ID;
 
-	public TEGMatLibRecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
+	public TEGMatLibRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 		MOD_ID = materials.getModID();
@@ -92,12 +92,12 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 				}
 			}
 
-			private void oreSmelting(List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {
-				oreCooking(SmeltingRecipe::new, pIngredients, pCategory, CookingBookCategory.BLOCKS, pResult, pExperience, pCookingTIme, pGroup, "_from_smelting");
+			public void oreSmelting(List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {
+				oreCooking(RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, pIngredients, pCategory, pResult, pExperience, pCookingTIme, pGroup, "_from_smelting");
 			}
 
-			private void oreBlasting(List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup) {
-				oreCooking(BlastingRecipe::new, pIngredients, pCategory, CookingBookCategory.BLOCKS, pResult, pExperience, pCookingTime, pGroup, "_from_blasting");
+			public void oreBlasting(List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup) {
+				oreCooking(RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, pIngredients, pCategory, pResult, pExperience, pCookingTime, pGroup, "_from_blasting");
 			}
 
 			private void swordRecipe(Item result, Item ingredient, String advancementName) {
@@ -153,8 +153,8 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 
 				for (ItemLike i : equipment) {
 					if (i != null) {
-						SimpleCookingRecipeBuilder.smelting(Ingredient.of(i), RecipeCategory.MISC, CookingBookCategory.MISC, nugget, 0.1f, 200).unlockedBy("has_" + getItemName(material), has(material)).save(output, MOD_ID + ":" + getItemName(nugget) + "_from_smelting_" + getItemName(i));
-						SimpleCookingRecipeBuilder.blasting(Ingredient.of(i), RecipeCategory.MISC, CookingBookCategory.MISC, nugget, 0.1f, 100).unlockedBy("has_" + getItemName(material), has(material)).save(output, MOD_ID + ":" + getItemName(nugget) + "_from_blasting_" + getItemName(i));
+						SimpleCookingRecipeBuilder.smelting(Ingredient.of(i), RecipeCategory.MISC, nugget, 0.1f, 200).unlockedBy("has_" + getItemName(material), has(material)).save(output, MOD_ID + ":" + getItemName(nugget) + "_from_smelting_" + getItemName(i));
+						SimpleCookingRecipeBuilder.blasting(Ingredient.of(i), RecipeCategory.MISC, nugget, 0.1f, 100).unlockedBy("has_" + getItemName(material), has(material)).save(output, MOD_ID + ":" + getItemName(nugget) + "_from_blasting_" + getItemName(i));
 					}
 				}
 			}

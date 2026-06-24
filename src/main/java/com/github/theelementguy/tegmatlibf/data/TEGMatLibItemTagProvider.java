@@ -2,8 +2,8 @@ package com.github.theelementguy.tegmatlibf.data;
 
 import com.github.theelementguy.tegmatlibf.core.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public class TEGMatLibItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+public class TEGMatLibItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
 	protected final Supplier<List<MaterialConfiguration>> MATERIALS;
 
-	public TEGMatLibItemTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
+	public TEGMatLibItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 	}

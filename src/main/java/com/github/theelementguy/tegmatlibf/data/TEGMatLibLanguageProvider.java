@@ -1,7 +1,7 @@
 package com.github.theelementguy.tegmatlibf.data;
 
 import com.github.theelementguy.tegmatlibf.core.*;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.util.Util;
@@ -15,7 +15,7 @@ public class TEGMatLibLanguageProvider extends FabricLanguageProvider {
 
 	protected Supplier<List<MaterialConfiguration>> MATERIALS;
 
-	public TEGMatLibLanguageProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
+	public TEGMatLibLanguageProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
 		super(output, "en_us", provider);
 		this.MATERIALS = materials::getMaterials;
 	}

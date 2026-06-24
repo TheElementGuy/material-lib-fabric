@@ -2,10 +2,16 @@ package com.github.theelementguy.tegmatlibf.loot;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
+import net.minecraft.world.level.storage.loot.functions.SetItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +27,7 @@ public class OverrideItemFunction extends LootItemConditionalFunction {
 	}
 
 	@Override
-	public MapCodec<? extends LootItemConditionalFunction> codec() {
+	public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
 		return null;
 	}
 
