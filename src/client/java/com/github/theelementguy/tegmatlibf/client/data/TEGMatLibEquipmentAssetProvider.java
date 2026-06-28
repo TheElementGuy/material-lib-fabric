@@ -7,8 +7,8 @@ import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -49,12 +49,9 @@ public class TEGMatLibEquipmentAssetProvider extends EquipmentAssetProvider {
 	}
 
 	public void bootstrapEquipmentAsset(BiConsumer<ResourceKey<EquipmentAsset>, EquipmentClientInfo> consumer, MaterialConfiguration materialConfiguration) {
-		EquipmentClientInfo.Builder builder = EquipmentClientInfo.builder().addHumanoidLayers(Identifier.fromNamespaceAndPath(materialConfiguration.getModID(), materialConfiguration.getEquipmentAsset().identifier().getPath()));
+		EquipmentClientInfo.Builder builder = EquipmentClientInfo.builder().addHumanoidLayers(ResourceLocation.fromNamespaceAndPath(materialConfiguration.getModID(), materialConfiguration.getEquipmentAsset().location().getPath()));
 		if (materialConfiguration.getHorseArmor().isUsing()) {
-			builder.addLayers(EquipmentClientInfo.LayerType.HORSE_BODY, new EquipmentClientInfo.Layer(materialConfiguration.getEquipmentAsset().identifier(), Optional.empty(), true));
-		}
-		if (materialConfiguration.getNautilusArmor().isUsing()) {
-			builder.addLayers(EquipmentClientInfo.LayerType.NAUTILUS_BODY, new EquipmentClientInfo.Layer(materialConfiguration.getEquipmentAsset().identifier()));
+			builder.addLayers(EquipmentClientInfo.LayerType.HORSE_BODY, new EquipmentClientInfo.Layer(materialConfiguration.getEquipmentAsset().location(), Optional.empty(), true));
 		}
 		consumer.accept(materialConfiguration.getEquipmentAsset(), builder.build());
 	}

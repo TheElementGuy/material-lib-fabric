@@ -36,9 +36,6 @@ public record PreLootModifierInfo(LootItemSlot slot, LootModifierType type, Stri
 			case HOE -> {
 				return new LootModifierInfo(type, table, config.getHoe(), chance);
 			}
-			case SPEAR -> {
-				return new LootModifierInfo(type, table, config.getSpear(), chance);
-			}
 			case LEGGINGS -> {
 				return new LootModifierInfo(type, table, config.getLeggings(), chance);
 			}
@@ -50,9 +47,6 @@ public record PreLootModifierInfo(LootItemSlot slot, LootModifierType type, Stri
 			}
 			case HORSE_ARMOR -> {
 				return new LootModifierInfo(type, table, config.getHorseArmor().get().get(), chance);
-			}
-			case NAUTILUS_ARMOR -> {
-				return new LootModifierInfo(type, table, config.getNautilusArmor().get().get(), chance);
 			}
 			default -> {
 				return new LootModifierInfo(type, table, config.getBaseItem(), chance);

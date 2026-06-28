@@ -89,13 +89,6 @@ public class TEGMatLibCreativeModeTabFiller {
 			if (m.getHorseArmor().isUsing()) {
 				TEGMatLibUtil.inventoryAddAfter(m.getHorseArmor().get().get(), TEGMatLibUtil.getItemFromKey(m.getAnimalArmorBefore() + "_horse_armor", materialHolder.getModID()), currentTab);
 			}
-			if (m.getNautilusArmor().isUsing()) {
-				if (Objects.equals(m.getAnimalArmorBefore(), "leather")) {
-					TEGMatLibUtil.inventoryAddBefore(Items.COPPER_NAUTILUS_ARMOR, m.getNautilusArmor().get().get(), currentTab);
-				} else {
-					TEGMatLibUtil.inventoryAddAfter(m.getNautilusArmor().get().get(), TEGMatLibUtil.getItemFromKey(m.getAnimalArmorBefore() + "_nautilus_armor", materialHolder.getModID()), currentTab);
-				}
-			}
 		}
 		currentTab = CreativeModeTabs.TOOLS_AND_UTILITIES;
 		for (MaterialConfiguration m : materials) {

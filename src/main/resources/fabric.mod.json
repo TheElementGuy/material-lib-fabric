@@ -11,7 +11,7 @@
 	"environment": "*",
 	"depends": {
 		"fabricloader": ">=0.19.3",
-		"minecraft": "~1.21.11",
+		"minecraft": "~1.21.4",
 		"java": ">=25",
 		"fabric-api": "*"
 	},
@@ -19,5 +19,6 @@
     "main": [
       "com.github.theelementguy.tegmatlibf.Initializer"
     ]
-  }
+  },
+  "accessWidener": "tegmatlibf.classtweaker"
 }

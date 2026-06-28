@@ -4,7 +4,7 @@ import com.github.theelementguy.tegmatlibf.core.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -30,7 +30,6 @@ public class TEGMatLibLanguageProvider extends FabricLanguageProvider {
 			translationBuilder.add(config.getPickaxe(), config.getHumanReadableName() + " Pickaxe");
 			translationBuilder.add(config.getShovel(), config.getHumanReadableName() + " Shovel");
 			translationBuilder.add(config.getHoe(), config.getHumanReadableName() + " Hoe");
-			translationBuilder.add(config.getSpear(), config.getHumanReadableName() + "Spear");
 
 			translationBuilder.add(config.getHelmet(), config.getHumanReadableName() + " Helmet");
 			translationBuilder.add(config.getChestplate(), config.getHumanReadableName() + " Chestplate");
@@ -40,13 +39,10 @@ public class TEGMatLibLanguageProvider extends FabricLanguageProvider {
 			if (config.getHorseArmor().isUsing()) {
 				translationBuilder.add(config.getHorseArmor().get().get().asItem(), config.getHumanReadableName() + " Horse Armor");
 			}
-			if (config.getNautilusArmor().isUsing()) {
-				translationBuilder.add(config.getNautilusArmor().get().get().asItem(), config.getHumanReadableName() + " Nautilus Armor");
-			}
 
 			translationBuilder.add(config.getBaseBlock(), "Block of " + config.getHumanReadableName());
 
-			translationBuilder.add(Util.makeDescriptionId("trim_material", config.getTrimMaterial().identifier()), config.getHumanReadableName());
+			translationBuilder.add(Util.makeDescriptionId("trim_material", config.getTrimMaterial().location()), config.getHumanReadableName());
 
 			switch (config.getType()) {
 				case IRON -> {

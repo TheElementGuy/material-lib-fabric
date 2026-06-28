@@ -47,7 +47,6 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 					pickaxeRecipe(config.getPickaxe(), config.getBaseItem(), "has_" + config.getBaseName());
 					shovelRecipe(config.getShovel(), config.getBaseItem(), "has_" + config.getBaseName());
 					hoeRecipe(config.getHoe(), config.getBaseItem(), "has_" + config.getBaseName());
-					spearRecipe(config.getSpear(), config.getBaseItem(), "has_" + config.getBaseName());
 
 					helmetRecipe(config.getHelmet(), config.getBaseItem(), "has_" + config.getBaseName());
 					chestplateRecipe(config.getChestplate(), config.getBaseItem(), "has_" + config.getBaseName());
@@ -58,7 +57,7 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 						case IRON -> {
 							IronTypeMaterialConfiguration ironConfig = (IronTypeMaterialConfiguration) config;
 							blockRecipe(ironConfig.getRawItem(), ironConfig.getRawBlock().asItem());
-							nuggetRecipe(ironConfig.getBaseItem(), ironConfig.getNugget(), List.of(ironConfig.getSword(), ironConfig.getAxe(), ironConfig.getPickaxe(), ironConfig.getShovel(), ironConfig.getHoe(), ironConfig.getSpear(), ironConfig.getHelmet(), ironConfig.getChestplate(), ironConfig.getLeggings(), ironConfig.getBoots(), ironConfig.getNautilusArmor().get().orElse(null), ironConfig.getHorseArmor().get().orElse(null)));
+							nuggetRecipe(ironConfig.getBaseItem(), ironConfig.getNugget(), List.of(ironConfig.getSword(), ironConfig.getAxe(), ironConfig.getPickaxe(), ironConfig.getShovel(), ironConfig.getHoe(), ironConfig.getHelmet(), ironConfig.getChestplate(), ironConfig.getLeggings(), ironConfig.getBoots(), ironConfig.getHorseArmor().get().orElse(null)));
 							allOreSmelting(ironConfig.getBaseItem(), List.of(ironConfig.getOre(), ironConfig.getDeepslateOre(), ironConfig.getRawItem()), ironConfig.getSmeltingExperience(), ironConfig.getBaseName());
 						}
 						case DIAMOND -> {
@@ -80,7 +79,7 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 						}
 						case END_IRON -> {
 							EndIronTypeMaterialConfiguration endIronMatConfig = (EndIronTypeMaterialConfiguration) config;
-							nuggetRecipe(endIronMatConfig.getBaseItem(), endIronMatConfig.getNugget(), List.of(endIronMatConfig.getSword(), endIronMatConfig.getAxe(), endIronMatConfig.getPickaxe(), endIronMatConfig.getShovel(), endIronMatConfig.getHoe(), endIronMatConfig.getSpear(), endIronMatConfig.getHelmet(), endIronMatConfig.getChestplate(), endIronMatConfig.getLeggings(), endIronMatConfig.getBoots(), endIronMatConfig.getNautilusArmor().get().orElse(null), endIronMatConfig.getHorseArmor().get().orElse(null)));
+							nuggetRecipe(endIronMatConfig.getBaseItem(), endIronMatConfig.getNugget(), List.of(endIronMatConfig.getSword(), endIronMatConfig.getAxe(), endIronMatConfig.getPickaxe(), endIronMatConfig.getShovel(), endIronMatConfig.getHoe(), endIronMatConfig.getHelmet(), endIronMatConfig.getChestplate(), endIronMatConfig.getLeggings(), endIronMatConfig.getBoots(), endIronMatConfig.getHorseArmor().get().orElse(null)));
 							allOreSmelting(endIronMatConfig.getBaseItem(), List.of(endIronMatConfig.getEndOre()), endIronMatConfig.getSmeltingExperience(), endIronMatConfig.getBaseName());
 						}
 						case SAND_DIAMOND -> {

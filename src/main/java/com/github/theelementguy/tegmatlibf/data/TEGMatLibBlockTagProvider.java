@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -29,9 +29,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 
-		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("fabric", "needs_tool_level_0"));
+		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("fabric", "needs_tool_level_0"));
 
-		 NEEDS_NETHERITE_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("fabric", "needs_tool_level_4"));
+		 NEEDS_NETHERITE_TOOL = TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("fabric", "needs_tool_level_4"));
 	}
 
 	@Override
@@ -45,182 +45,182 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 
 	protected void addMaterial(MaterialConfiguration material) {
 		
-		builder(ConventionalBlockTags.STORAGE_BLOCKS).add(material.getBaseBlock().builtInRegistryHolder().key());
+		tag(ConventionalBlockTags.STORAGE_BLOCKS).add(material.getBaseBlock().builtInRegistryHolder().key());
 		MineabilityTier tier = (material.getMineabilityLevel() == MineabilityTier.DEFAULT) ? getMineability(material.getMiningLevel()) : material.getMineabilityLevel();
 		switch (material.getType()) {
 			case IRON -> {
 				IronTypeMaterialConfiguration mat = (IronTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				}
-				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
-				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
 			}
 			case DIAMOND -> {
 				DiamondTypeMaterialConfiguration mat = (DiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				}
-				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
-				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
 			}
 			case CUBIC_ZIRCONIA -> {
 				CubicZirconiaTypeMaterialConfiguration mat = (CubicZirconiaTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 				}
-				builder(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
-				builder(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_STONE).add(mat.getOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE).add(mat.getDeepslateOre().builtInRegistryHolder().key());
 			}
 			case NETHER_DIAMOND -> {
 				NetherDiamondTypeMaterialConfiguration mat = (NetherDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getNetherOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getNetherOre().builtInRegistryHolder().key());
 				}
-				builder(ConventionalBlockTags.ORES_IN_GROUND_NETHERRACK).add(mat.getNetherOre().builtInRegistryHolder().key());
+				tag(ConventionalBlockTags.ORES_IN_GROUND_NETHERRACK).add(mat.getNetherOre().builtInRegistryHolder().key());
 			}
 			case END_DIAMOND -> {
 				EndDiamondTypeMaterialConfiguration mat = (EndDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().builtInRegistryHolder().key());
 				}
 			}
 			case END_IRON -> {
 				EndIronTypeMaterialConfiguration mat = (EndIronTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getEndOre().builtInRegistryHolder().key());
 				}
 			}
 			case SAND_DIAMOND -> {
 				SandDiamondTypeMaterialConfiguration mat = (SandDiamondTypeMaterialConfiguration) material;
 				if (tier == MineabilityTier.ALL) {
-					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL);
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
+					tag(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_WOODEN_TOOL.location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL.location());
 				} else if (tier == MineabilityTier.NETHERITE) {
-					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
+					tag(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL.location());
 					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					//tag(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
 				} else {
-					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					tag(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()).location());
+					tag(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()).location());
 				}
 				if (mat.isSingleOre()) {
-					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
 				} else {
-					builder(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					tag(ConventionalBlockTags.ORE_RATES_DENSE).add(mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
 				}
 			}
 		}

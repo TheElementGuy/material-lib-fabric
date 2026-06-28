@@ -18,11 +18,13 @@ loom {
     splitEnvironmentSourceSets()
 
     mods {
-        "modid" {
+        "tegmatlibf" {
             sourceSet sourceSets.main
             sourceSet sourceSets.client
         }
     }
+
+    accessWidenerPath = file("src/main/resources/tegmatlibf.classtweaker")
 
 }
 

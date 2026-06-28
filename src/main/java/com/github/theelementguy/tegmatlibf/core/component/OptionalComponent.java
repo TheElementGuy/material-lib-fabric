@@ -21,10 +21,6 @@ public class OptionalComponent<T> {
 		return new OptionalComponent<>(using, ComponentType.HORSE_ARMOR);
 	}
 
-	public static OptionalComponent<Item> nautilusArmor(boolean using) {
-		return new OptionalComponent<>(using, ComponentType.NAUTILUS_ARMOR);
-	}
-
 	public boolean isUsing() {
 		return USING;
 	}
