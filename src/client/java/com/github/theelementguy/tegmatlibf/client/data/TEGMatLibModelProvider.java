@@ -58,7 +58,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 		Identifier Identifier2 = TextureMapping.getItemTexture(item, "_overlay");
 		List<SelectItemModel.SwitchCase<ResourceKey<TrimMaterial>>> list = new ArrayList(TRIM_MATERIAL_MODELS.size());
 
-		for (ItemModelGenerators.TrimMaterialData itemmodelgenerators$trimmaterialdata : TRIM_MATERIAL_MODELS) {
+		for(ItemModelGenerators.TrimMaterialData itemmodelgenerators$trimmaterialdata : TRIM_MATERIAL_MODELS) {
 			Identifier Identifier3 = Identifier.withSuffix("_" + itemmodelgenerators$trimmaterialdata.assets().base().suffix() + "_trim");
 			String var10001 = itemmodelgenerators$trimmaterialdata.assets().assetId(equipmentAsset).suffix();
 			String path = item.getDescriptionId();
@@ -76,6 +76,17 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 
 			list.add(ItemModelUtils.when(itemmodelgenerators$trimmaterialdata.materialKey(), itemmodel$unbaked));
 		}
+
+		ItemModel.Unbaked itemmodel$unbaked1;
+		if (usesSecondLayer) {
+			ModelTemplates.TWO_LAYERED_ITEM.create(Identifier, TextureMapping.layered(Identifier1, Identifier2), itemModels.modelOutput);
+			itemmodel$unbaked1 = ItemModelUtils.tintedModel(Identifier, new ItemTintSource[]{new Dye(-6265536)});
+		} else {
+			ModelTemplates.FLAT_ITEM.create(Identifier, TextureMapping.layer0(Identifier1), itemModels.modelOutput);
+			itemmodel$unbaked1 = ItemModelUtils.plainModel(Identifier);
+		}
+
+		itemModels.itemModelOutput.accept(item, ItemModelUtils.select(new TrimMaterialProperty(), itemmodel$unbaked1, list));
 	}
 
 	@Override
