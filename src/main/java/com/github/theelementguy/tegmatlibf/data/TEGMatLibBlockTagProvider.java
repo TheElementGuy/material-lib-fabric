@@ -29,9 +29,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 
-		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(materials.getModID(), "needs_tool_level_4"));
+		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(materials.getModID(), "needs_tool_level_0"));
 
-		 NEEDS_NETHERITE_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(materials.getModID(), "needs_tool_level_0"));
+		 NEEDS_NETHERITE_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(materials.getModID(), "needs_tool_level_4"));
 	}
 
 	@Override
