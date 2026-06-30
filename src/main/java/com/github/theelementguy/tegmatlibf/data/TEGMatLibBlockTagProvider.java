@@ -60,7 +60,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
@@ -85,7 +87,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
@@ -110,7 +114,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().properties().blockId(), mat.getDeepslateOre().properties().blockId());
@@ -135,7 +141,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getNetherOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre().properties().blockId());
@@ -159,7 +167,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getEndOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().properties().blockId());
@@ -182,7 +192,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getRawBlock().properties().blockId(), mat.getEndOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().properties().blockId());
@@ -205,7 +217,9 @@ public class TEGMatLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvi
 					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().properties().blockId(), mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre().properties().blockId(), mat.getGravelOre().properties().blockId());
