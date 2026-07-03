@@ -21,17 +21,14 @@ import java.util.function.Supplier;
 public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
 	private Supplier<List<MaterialConfiguration>> MATERIALS;
-	
+
 	private final TagKey<Block> NEEDS_WOOD_TOOL;
-	private final TagKey<Block> NEEDS_NETHERITE_TOOL;
 
 	public TEGMatLibBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider, FullyConfiguredMaterialHolder materials) {
 		super(output, provider);
 		MATERIALS = materials::getMaterials;
 
-		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("fabric", "needs_tool_level_0"));
-
-		 NEEDS_NETHERITE_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("fabric", "needs_tool_level_4"));
+		NEEDS_WOOD_TOOL = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(materials.getModID(), "needs_tool_level_4"));
 	}
 
 	@Override
@@ -44,7 +41,7 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 	}
 
 	protected void addMaterial(MaterialConfiguration material) {
-		
+
 		builder(ConventionalBlockTags.STORAGE_BLOCKS).add(material.getBaseBlock().builtInRegistryHolder().key());
 		MineabilityTier tier = (material.getMineabilityLevel() == MineabilityTier.DEFAULT) ? getMineability(material.getMiningLevel()) : material.getMineabilityLevel();
 		switch (material.getType()) {
@@ -56,15 +53,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
@@ -82,15 +80,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getOre(), mat.getDeepslateOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
@@ -108,15 +107,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getRawBlock(), mat.getOre(), mat.getDeepslateOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getOre().builtInRegistryHolder().key(), mat.getDeepslateOre().builtInRegistryHolder().key());
@@ -134,15 +134,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getNetherOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getNetherOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getNetherOre().builtInRegistryHolder().key());
@@ -159,15 +160,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getEndOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
@@ -183,15 +185,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getRawBlock(), mat.getEndOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_PICKAXE).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getRawBlock().builtInRegistryHolder().key(), mat.getEndOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getEndOre().builtInRegistryHolder().key());
@@ -207,15 +210,16 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_WOOD_TOOL);
 				} else if (tier == MineabilityTier.NETHERITE) {
 					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(NEEDS_NETHERITE_TOOL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
-					builder(mat.getNeedsMaterial()).addOptionalTag(NEEDS_NETHERITE_TOOL);
-					//it'll be empty anyway
-					//builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL).removeTag(mat.getNeedsMaterial());
+					builder(mat.getNeedsMaterial()).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
+					emulateNeedsNetherite(mat.getBaseBlock(), mat.getGravelOre(), mat.getSandOre());
+					builder(mat.getIncorrectForMaterial()).addOptionalTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 				} else {
 					builder(BlockTags.MINEABLE_WITH_SHOVEL).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
 					builder(getNeedsTagForMineability(tier)).add(mat.getBaseBlock().builtInRegistryHolder().key(), mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
 					builder(mat.getIncorrectForMaterial()).addOptionalTag(getTagForTierIncorrect(mat.getMiningLevel()));
-					builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					if (mat.getMiningLevel() != MiningTier.NETHERITE) {
+						builder(mat.getNeedsMaterial()).addOptionalTag(getTagForTierNeeds(mat.getMiningLevel()));
+					}
 				}
 				if (mat.isSingleOre()) {
 					builder(ConventionalBlockTags.ORE_RATES_SINGULAR).add(mat.getSandOre().builtInRegistryHolder().key(), mat.getGravelOre().builtInRegistryHolder().key());
@@ -234,7 +238,7 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 			case IRON -> BlockTags.NEEDS_STONE_TOOL;
 			case DIAMOND -> BlockTags.NEEDS_IRON_TOOL;
 			case NETHERITE -> BlockTags.NEEDS_DIAMOND_TOOL;
-			case BEYOND_NETHERITE -> NEEDS_NETHERITE_TOOL;
+			case BEYOND_NETHERITE -> {throw new IllegalArgumentException("Please emulate this behavior using the emulateNeedsNetherite method");}
 		};
 	}
 
@@ -255,7 +259,7 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 			case STONE -> BlockTags.NEEDS_STONE_TOOL;
 			case IRON -> BlockTags.NEEDS_IRON_TOOL;
 			case DIAMOND -> BlockTags.NEEDS_DIAMOND_TOOL;
-			case NETHERITE -> NEEDS_NETHERITE_TOOL;
+			case NETHERITE -> {throw new IllegalArgumentException("Please emulate this behavior separately");}
 			case BEYOND_NETHERITE -> {throw new IllegalArgumentException("Mining level of beyond netherite not permitted. Such a material should be incorrect for netherite and remove needs for that level.");}
 		};
 	}
@@ -279,8 +283,19 @@ public class TEGMatLibBlockTagProvider extends FabricTagProvider.BlockTagProvide
 			case STONE -> BlockTags.NEEDS_STONE_TOOL;
 			case IRON -> BlockTags.NEEDS_IRON_TOOL;
 			case DIAMOND -> BlockTags.NEEDS_DIAMOND_TOOL;
-			case NETHERITE -> NEEDS_NETHERITE_TOOL;
+			case NETHERITE -> {throw new IllegalArgumentException("Sorry. Please emulate this functionality");}
 		};
+	}
+
+	public void emulateNeedsNetherite(Block... blocks) {
+		for (Block b : blocks) {
+			builder(BlockTags.INCORRECT_FOR_WOODEN_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+			builder(BlockTags.INCORRECT_FOR_STONE_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+			builder(BlockTags.INCORRECT_FOR_IRON_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+			builder(BlockTags.INCORRECT_FOR_GOLD_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+			builder(BlockTags.INCORRECT_FOR_COPPER_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+			builder(BlockTags.INCORRECT_FOR_DIAMOND_TOOL).add(b.builtInRegistryHolder().key()).setReplace(false);
+		}
 	}
 
 }
