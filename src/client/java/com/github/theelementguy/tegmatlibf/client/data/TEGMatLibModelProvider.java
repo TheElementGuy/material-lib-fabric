@@ -41,6 +41,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 		super(output);
 		this.MATERIALS = materials::getMaterials;
 		this.MOD_ID = materials.getModID();
+		fillTrimMaterials();
 	}
 
 	private void fillTrimMaterials() {
