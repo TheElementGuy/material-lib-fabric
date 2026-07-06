@@ -303,7 +303,14 @@ public abstract class MaterialConfiguration {
 		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_horse_armor", MOD_ID), new AnimalArmorItem(ARMOR_MATERIAL, AnimalArmorItem.BodyType.EQUESTRIAN, false, DEFAULT_PROPERTIES.get().stacksTo(1)));
 	}
 
+	protected Holder<ArmorMaterial> registerArmorMaterial() {
+		return Registry.registerForHolder(BuiltInRegistries.ARMOR_MATERIAL, ResourceKey.create(Registries.ARMOR_MATERIAL, ResourceLocation.fromNamespaceAndPath(BASE_NAME, MOD_ID)), PRE_ARMOR_MATERIAL.get());
+	}
+
 	protected void fillBaseEquipment() {
+
+		ARMOR_MATERIAL = registerArmorMaterial();
+
 		SWORD = registerSword();
 		AXE = registerAxe();
 		PICKAXE = registerPickaxe();
