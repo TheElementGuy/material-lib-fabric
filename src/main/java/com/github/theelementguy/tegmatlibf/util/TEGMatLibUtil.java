@@ -14,10 +14,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.EquipmentAssets;
-import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -41,34 +39,25 @@ public class TEGMatLibUtil {
 		return ResourceKey.create(Registries.RECIPE, ResourceLocation.fromNamespaceAndPath(modId, name));
 	}
 
-	public static ResourceKey<EquipmentAsset> createEquipmentAssetResourceKey(String name, String modId) {
-		return ResourceKey.create(EquipmentAssets.ROOT_ID, ResourceLocation.fromNamespaceAndPath(modId, name));
-	}
-
 	public static Item getItemFromKey(String key, String modId) {
 
-		if (BuiltInRegistries.ITEM.get(TEGMatLibUtil.createItemResourceKey(key, modId)).isEmpty()) {
+		if (BuiltInRegistries.ITEM.get(TEGMatLibUtil.createItemResourceKey(key, modId)) == null) {
 			return getItemFromKeyMinecraft(key);
 		}
 
-		return BuiltInRegistries.ITEM.get(TEGMatLibUtil.createItemResourceKey(key, modId)).get().value();
+		return BuiltInRegistries.ITEM.get(TEGMatLibUtil.createItemResourceKey(key, modId));
 
 	}
 
 	public static Item getItemFromKeyMinecraft(String key) {
-		return BuiltInRegistries.ITEM.get(ResourceKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace(key))).get().value();
+		return BuiltInRegistries.ITEM.get(ResourceKey.create(Registries.ITEM, ResourceLocation.withDefaultNamespace(key)));
 	}
 
 	public static Block getBlockFromKey(String key, String modId) {
-		if (BuiltInRegistries.BLOCK.get(TEGMatLibUtil.createBlockResourceKey(key, modId)).isEmpty()) {
+		if (BuiltInRegistries.BLOCK.get(TEGMatLibUtil.createBlockResourceKey(key, modId)) == null) {
 			return getBlockFromKey(key, "minecraft");
 		}
-		return BuiltInRegistries.BLOCK.get(TEGMatLibUtil.createBlockResourceKey(key, modId)).get().value();
-	}
-
-	public static EquipmentAsset getMaterialAssetGroupFromKey(String key, String modId) {
-		Registry<EquipmentAsset> registry = (Registry<EquipmentAsset>) BuiltInRegistries.REGISTRY.get(EquipmentAssets.ROOT_ID.registry()).get().value();
-		return registry.get(TEGMatLibUtil.createEquipmentAssetResourceKey(key, modId)).get().value();
+		return BuiltInRegistries.BLOCK.get(TEGMatLibUtil.createBlockResourceKey(key, modId));
 	}
 
 	public static String toUpsideDown(String given) {

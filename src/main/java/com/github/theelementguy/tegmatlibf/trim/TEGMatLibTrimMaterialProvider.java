@@ -4,7 +4,7 @@ import com.github.theelementguy.tegmatlibf.core.FullyConfiguredMaterialHolder;
 import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.world.item.equipment.trim.TrimMaterial;
+import net.minecraft.world.item.armortrim.TrimMaterial;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -18,15 +18,22 @@ public class TEGMatLibTrimMaterialProvider {
 	}
 
 	public void addEntries(FabricDynamicRegistryProvider.Entries entries) {
+
+		float id = 1.0f;
+
 		for (MaterialConfiguration config : MATERIALS.get()) {
-			config.addTrimMaterialEntry(entries);
+			id += 0.1f;
+			config.addTrimMaterialEntry(entries, id);
 		}
 	}
 
 	public void bootstrap(BootstrapContext<TrimMaterial> context) {
 
+		float id = 1.0f;
+
 		for (MaterialConfiguration config : MATERIALS.get()) {
-			config.bootstrapTrimMaterial(context);
+			id += 0.1f;
+			config.bootstrapTrimMaterial(context, id);
 		}
 
 	}

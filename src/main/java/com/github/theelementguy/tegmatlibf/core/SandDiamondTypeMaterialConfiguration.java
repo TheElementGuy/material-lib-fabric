@@ -47,10 +47,10 @@ public class SandDiamondTypeMaterialConfiguration extends MaterialConfiguration 
 
 	@Override
 	public void fillBlocks() {
-		SAND_ORE_BLOCK = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID), new ColoredFallingBlock(new ColorRGBA(14406560), BlockBehaviour.Properties.of().destroyTime(1.5f).explosionResistance(1f).mapColor(MapColor.SAND).sound(SoundType.SAND).requiresCorrectToolForDrops().setId(TEGMatLibUtil.createBlockResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID))));
-		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID), new BlockItem(SAND_ORE_BLOCK, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID)).useBlockDescriptionPrefix()));
-		GRAVEL_ORE_BLOCK = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID), new ColoredFallingBlock(new ColorRGBA(14406560), BlockBehaviour.Properties.of().destroyTime(1.5f).explosionResistance(1f).mapColor(MapColor.STONE).sound(SoundType.GRAVEL).requiresCorrectToolForDrops().setId(TEGMatLibUtil.createBlockResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID))));
-		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID), new BlockItem(GRAVEL_ORE_BLOCK, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID)).useBlockDescriptionPrefix()));
+		SAND_ORE_BLOCK = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID), new ColoredFallingBlock(new ColorRGBA(14406560), BlockBehaviour.Properties.of().destroyTime(1.5f).explosionResistance(1f).mapColor(MapColor.SAND).sound(SoundType.SAND).requiresCorrectToolForDrops()));
+		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey("sand_" + BASE_NAME + "_ore", MOD_ID), new BlockItem(SAND_ORE_BLOCK, DEFAULT_PROPERTIES.get()));
+		GRAVEL_ORE_BLOCK = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID), new ColoredFallingBlock(new ColorRGBA(14406560), BlockBehaviour.Properties.of().destroyTime(1.5f).explosionResistance(1f).mapColor(MapColor.STONE).sound(SoundType.GRAVEL).requiresCorrectToolForDrops()));
+		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey("gravel_" + BASE_NAME + "_ore", MOD_ID), new BlockItem(GRAVEL_ORE_BLOCK, DEFAULT_PROPERTIES.get()));
 		fillBaseBlock();
 	}
 

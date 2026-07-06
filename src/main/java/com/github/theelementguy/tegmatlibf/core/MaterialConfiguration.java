@@ -26,10 +26,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.Util;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.trim.TrimMaterial;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.armortrim.TrimMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -80,14 +79,14 @@ public abstract class MaterialConfiguration {
 
 	protected final String TRIM_MATERIAL_DESCRIPTION_COLOR;
 
-	protected Supplier<ToolMaterial> TOOL_MATERIAL;
-	protected Supplier<ArmorMaterial> ARMOR_MATERIAL;
+	protected Supplier<Tier> TOOL_TIER;
+	protected Holder<ArmorMaterial> ARMOR_MATERIAL;
+	protected Supplier<ArmorMaterial> PRE_ARMOR_MATERIAL;
+	protected int ARMOR_DURABILITY;
 
 	protected Supplier<TagKey<@NotNull Block>> INCORRECT_FOR_MATERIAL;
 	protected Supplier<TagKey<@NotNull Block>> NEEDS_MATERIAL;
 	protected Supplier<TagKey<@NotNull Item>> REPAIRABLES;
-
-	protected Supplier<ResourceKey<@NotNull EquipmentAsset>> EQUIPMENT_ASSET;
 
 	protected final Supplier<MapColor> MAP_COLOR;
 	protected final Supplier<SoundType> SOUND_TYPE;
@@ -140,19 +139,49 @@ public abstract class MaterialConfiguration {
 		INCORRECT_FOR_MATERIAL = () -> TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(MOD_ID, "incorrect_for_" + BASE_NAME + "_tool"));
 		NEEDS_MATERIAL = () -> TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(MOD_ID, "needs_" + BASE_NAME));
 		REPAIRABLES = () -> TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MOD_ID, BASE_NAME + "_repairables"));
-		EQUIPMENT_ASSET = () -> TEGMatLibUtil.createEquipmentAssetResourceKey(BASE_NAME, MOD_ID);
-		TOOL_MATERIAL = () -> new ToolMaterial(INCORRECT_FOR_MATERIAL.get(), toolDurability, speed, attackDamageBonus, enchantmentValue, REPAIRABLES.get());
-		ARMOR_MATERIAL = () -> new ArmorMaterial(armorDurability, Util.make(new EnumMap<ArmorType, Integer>(ArmorType.class), attribute -> {
-			attribute.put(ArmorType.HELMET, helmetDefense);
-			attribute.put(ArmorType.CHESTPLATE, chestplateDefense);
-			attribute.put(ArmorType.LEGGINGS, leggingsDefense);
-			attribute.put(ArmorType.BOOTS, bootsDefense);
-			attribute.put(ArmorType.BODY, horseDefense);
-		}), enchantmentValue, equipSound.get(), toughness, knockbackResistance, REPAIRABLES.get(), EQUIPMENT_ASSET.get());
+		TOOL_TIER = () -> new Tier() {
+			@Override
+			public int getUses() {
+				return toolDurability;
+			}
+
+			@Override
+			public float getSpeed() {
+				return speed;
+			}
+
+			@Override
+			public float getAttackDamageBonus() {
+				return attackDamageBonus;
+			}
+
+			@Override
+			public TagKey<Block> getIncorrectBlocksForDrops() {
+				return INCORRECT_FOR_MATERIAL.get();
+			}
+
+			@Override
+			public int getEnchantmentValue() {
+				return enchantmentValue;
+			}
+
+			@Override
+			public Ingredient getRepairIngredient() {
+				return Ingredient.of(BASE_MATERIAL);
+			}
+		};
+		EnumMap<ArmorItem.Type, Integer> defenseMap = new EnumMap<>(ArmorItem.Type.class);
+		defenseMap.put(ArmorItem.Type.HELMET, helmetDefense);
+		defenseMap.put(ArmorItem.Type.CHESTPLATE, chestplateDefense);
+		defenseMap.put(ArmorItem.Type.LEGGINGS, leggingsDefense);
+		defenseMap.put(ArmorItem.Type.BOOTS, bootsDefense);
+		defenseMap.put(ArmorItem.Type.BODY, horseDefense);
+		PRE_ARMOR_MATERIAL = () -> new ArmorMaterial(defenseMap, enchantmentValue, equipSound.get(), () -> Ingredient.of(BASE_MATERIAL.asItem()), List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(MOD_ID, BASE_NAME))), toughness, knockbackResistance);
 		fillTrimMaterialKeys();
 		fillConfiguredFeatureKeys();
 		fillPlacedFeatureKeys();
 		HORSE_ARMOR = OptionalComponent.horseArmor(usingHorseArmor);
+		ARMOR_DURABILITY = armorDurability;
 	}
 
 	public String getBaseName() {
@@ -221,57 +250,57 @@ public abstract class MaterialConfiguration {
 	}
 
 	protected Item registerSimpleItem(String name) {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new Item(DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(name, MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new Item(DEFAULT_PROPERTIES.get()));
 	}
 
 	protected Item registerSimpleItemWithTrimMaterial(String name) {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new Item(DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(name, MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new Item(DEFAULT_PROPERTIES.get()));
 	}
 
 	protected Block registerSimpleBlock(String name, float destroyTime, float explosionResistance, MapColor color, SoundType soundType) {
-		Block blockToReturn = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey(name, MOD_ID), new Block(BlockBehaviour.Properties.of().destroyTime(destroyTime).explosionResistance(explosionResistance).mapColor(color).sound(soundType).requiresCorrectToolForDrops().setId(TEGMatLibUtil.createBlockResourceKey(name, MOD_ID))));
-		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new BlockItem(blockToReturn, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(name, MOD_ID)).useBlockDescriptionPrefix()));
+		Block blockToReturn = Registry.register(BuiltInRegistries.BLOCK, TEGMatLibUtil.createBlockResourceKey(name, MOD_ID), new Block(BlockBehaviour.Properties.of().destroyTime(destroyTime).explosionResistance(explosionResistance).mapColor(color).sound(soundType).requiresCorrectToolForDrops()));
+		Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(name, MOD_ID), new BlockItem(blockToReturn, DEFAULT_PROPERTIES.get()));
 		return blockToReturn;
 	}
 
 	protected SwordItem registerSword() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_sword", MOD_ID), new SwordItem(TOOL_MATERIAL.get(), 3.0f, -2.4f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_sword", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_sword", MOD_ID), new SwordItem(TOOL_TIER.get(), DEFAULT_PROPERTIES.get()));
 	}
 
 	protected AxeItem registerAxe() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID), new AxeItem(TOOL_MATERIAL.get(), 6.0f, -3.1f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID), new AxeItem(TOOL_TIER.get(), DEFAULT_PROPERTIES.get()));
 	}
 
 	protected PickaxeItem registerPickaxe() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_pickaxe", MOD_ID), new PickaxeItem(TOOL_MATERIAL.get(), 1.0f, -2.0f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_pickaxe", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_pickaxe", MOD_ID), new PickaxeItem(TOOL_TIER.get(), DEFAULT_PROPERTIES.get()));
 	}
 
 	protected ShovelItem registerShovel() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID), new ShovelItem(TOOL_MATERIAL.get(), 1.5f, -3f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID), new ShovelItem(TOOL_TIER.get(), DEFAULT_PROPERTIES.get()));
 	}
 
 	protected HoeItem registerHoe() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID), new HoeItem(TOOL_MATERIAL.get(), -2f, -1f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID), new HoeItem(TOOL_TIER.get(), DEFAULT_PROPERTIES.get()));
 	}
 
 	protected ArmorItem registerHelmet() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_helmet", MOD_ID), new ArmorItem(ARMOR_MATERIAL.get(), ArmorType.HELMET, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_helmet", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_helmet", MOD_ID), new ArmorItem(ARMOR_MATERIAL, ArmorItem.Type.HELMET, DEFAULT_PROPERTIES.get().durability(ArmorItem.Type.HELMET.getDurability(ARMOR_DURABILITY))));
 	}
 
 	protected ArmorItem registerChestplate() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_chestplate", MOD_ID), new ArmorItem(ARMOR_MATERIAL.get(), ArmorType.CHESTPLATE, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_chestplate", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_chestplate", MOD_ID), new ArmorItem(ARMOR_MATERIAL, ArmorItem.Type.CHESTPLATE, DEFAULT_PROPERTIES.get().durability(ArmorItem.Type.CHESTPLATE.getDurability(ARMOR_DURABILITY))));
 	}
 
 	protected ArmorItem registerLeggings() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_leggings", MOD_ID), new ArmorItem(ARMOR_MATERIAL.get(), ArmorType.LEGGINGS, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_leggings", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_leggings", MOD_ID), new ArmorItem(ARMOR_MATERIAL, ArmorItem.Type.LEGGINGS, DEFAULT_PROPERTIES.get().durability(ArmorItem.Type.LEGGINGS.getDurability(ARMOR_DURABILITY))));
 	}
 
 	protected ArmorItem registerBoots() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_boots", MOD_ID), new ArmorItem(ARMOR_MATERIAL.get(), ArmorType.BOOTS, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_boots", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_boots", MOD_ID), new ArmorItem(ARMOR_MATERIAL, ArmorItem.Type.BOOTS, DEFAULT_PROPERTIES.get().durability(ArmorItem.Type.BOOTS.getDurability(ARMOR_DURABILITY))));
 	}
 
 	protected AnimalArmorItem registerHorseArmor() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_horse_armor", MOD_ID), new AnimalArmorItem(ARMOR_MATERIAL.get(), AnimalArmorItem.BodyType.EQUESTRIAN, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_horse_armor", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_horse_armor", MOD_ID), new AnimalArmorItem(ARMOR_MATERIAL, AnimalArmorItem.BodyType.EQUESTRIAN, false, DEFAULT_PROPERTIES.get().stacksTo(1)));
 	}
 
 	protected void fillBaseEquipment() {
@@ -349,19 +378,19 @@ public abstract class MaterialConfiguration {
 		return REPAIRABLES.get();
 	}
 
-	public Item getHelmet() {
+	public ArmorItem getHelmet() {
 		return HELMET;
 	}
 
-	public Item getChestplate() {
+	public ArmorItem getChestplate() {
 		return CHESTPLATE;
 	}
 
-	public Item getLeggings() {
+	public ArmorItem getLeggings() {
 		return LEGGINGS;
 	}
 
-	public Item getBoots() {
+	public ArmorItem getBoots() {
 		return BOOTS;
 	}
 
@@ -369,12 +398,12 @@ public abstract class MaterialConfiguration {
 		return BASE_MATERIAL.asItem();
 	}
 
-	public void bootstrapTrimMaterial(BootstrapContext<TrimMaterial> context) {
-		context.register(TRIM_MATERIAL.get(), TrimMaterial.create(BASE_NAME, BASE_MATERIAL, Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().location())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow())), Map.of()));
+	public void bootstrapTrimMaterial(BootstrapContext<TrimMaterial> context, float id) {
+		context.register(TRIM_MATERIAL.get(), TrimMaterial.create(BASE_NAME, BASE_MATERIAL, id, Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().location())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow())), Map.of()));
 	}
 
-	public void addTrimMaterialEntry(FabricDynamicRegistryProvider.Entries entries) {
-		entries.add(TRIM_MATERIAL.get(), TrimMaterial.create(BASE_NAME, BASE_MATERIAL, Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().location())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow())), Map.of()));
+	public void addTrimMaterialEntry(FabricDynamicRegistryProvider.Entries entries, float id) {
+		entries.add(TRIM_MATERIAL.get(), TrimMaterial.create(BASE_NAME, BASE_MATERIAL, id, Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().location())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow())), Map.of()));
 	}
 
 	public void fillTrimMaterialKeys() {
@@ -383,10 +412,6 @@ public abstract class MaterialConfiguration {
 
 	public ResourceKey<TrimMaterial> getTrimMaterial() {
 		return TRIM_MATERIAL.get();
-	}
-
-	public ResourceKey<EquipmentAsset> getEquipmentAsset() {
-		return EQUIPMENT_ASSET.get();
 	}
 
 	public String getHumanReadableName() {
