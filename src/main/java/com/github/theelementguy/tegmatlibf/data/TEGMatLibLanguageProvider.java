@@ -30,7 +30,7 @@ public class TEGMatLibLanguageProvider extends FabricLanguageProvider {
 			translationBuilder.add(config.getPickaxe(), config.getHumanReadableName() + " Pickaxe");
 			translationBuilder.add(config.getShovel(), config.getHumanReadableName() + " Shovel");
 			translationBuilder.add(config.getHoe(), config.getHumanReadableName() + " Hoe");
-			translationBuilder.add(config.getSpear(), config.getHumanReadableName() + "Spear");
+			translationBuilder.add(config.getSpear(), config.getHumanReadableName() + " Spear");
 
 			translationBuilder.add(config.getHelmet(), config.getHumanReadableName() + " Helmet");
 			translationBuilder.add(config.getChestplate(), config.getHumanReadableName() + " Chestplate");
