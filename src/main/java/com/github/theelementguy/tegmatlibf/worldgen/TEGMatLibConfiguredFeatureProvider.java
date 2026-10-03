@@ -2,9 +2,8 @@ package com.github.theelementguy.tegmatlibf.worldgen;
 
 import com.github.theelementguy.tegmatlibf.core.FullyConfiguredMaterialHolder;
 import com.github.theelementguy.tegmatlibf.core.MaterialConfiguration;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -17,7 +16,7 @@ public class TEGMatLibConfiguredFeatureProvider {
 		MATERIALS = materials::getMaterials;
 	}
 
-	public void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+	public void bootstrap(BootstrapContext<Feature> context) {
 
 		for (MaterialConfiguration config : MATERIALS.get()) {
 			config.registerConfiguredFeatures(context);

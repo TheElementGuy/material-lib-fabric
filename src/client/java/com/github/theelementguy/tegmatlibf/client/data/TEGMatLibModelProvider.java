@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
-import net.minecraft.world.item.equipment.trim.MaterialAssetGroup;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.minecraft.world.item.equipment.trim.TrimMaterials;
 import org.w3c.dom.Text;
@@ -35,7 +34,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 
 	protected Supplier<List<MaterialConfiguration>> MATERIALS;
 
-	public final List<ItemModelGenerators.TrimMaterialData> TRIM_MATERIAL_MODELS = new ArrayList<>(List.of(new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.QUARTZ, TrimMaterials.QUARTZ), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.IRON, TrimMaterials.IRON), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.NETHERITE, TrimMaterials.NETHERITE), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.REDSTONE, TrimMaterials.REDSTONE), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.COPPER, TrimMaterials.COPPER), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.GOLD, TrimMaterials.GOLD), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.EMERALD, TrimMaterials.EMERALD), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.DIAMOND, TrimMaterials.DIAMOND), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.LAPIS, TrimMaterials.LAPIS), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.AMETHYST, TrimMaterials.AMETHYST), new ItemModelGenerators.TrimMaterialData(MaterialAssetGroup.RESIN, TrimMaterials.RESIN)));
+	public final List<TemuTrimMaterialData> TRIM_MATERIAL_MODELS = new ArrayList<>(List.of(new TemuTrimMaterialData("quartz", TrimMaterials.QUARTZ), new TemuTrimMaterialData("iron", TrimMaterials.IRON), new TemuTrimMaterialData("netherite", TrimMaterials.NETHERITE), new TemuTrimMaterialData("redstone", TrimMaterials.REDSTONE), new TemuTrimMaterialData("copper", TrimMaterials.COPPER), new TemuTrimMaterialData("gold", TrimMaterials.GOLD), new TemuTrimMaterialData("emerald", TrimMaterials.EMERALD), new TemuTrimMaterialData("diamond", TrimMaterials.DIAMOND), new TemuTrimMaterialData("lapis", TrimMaterials.LAPIS), new TemuTrimMaterialData("amethyst", TrimMaterials.AMETHYST), new TemuTrimMaterialData("resin", TrimMaterials.RESIN)));
 
 	protected String MOD_ID;
 
@@ -43,15 +42,16 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 		super(output);
 		this.MATERIALS = materials::getMaterials;
 		this.MOD_ID = materials.getModID();
-		ArrayList<ItemModelGenerators.TrimMaterialData> trimMaterialsToAdd = new ArrayList<>();
+		ArrayList<TemuTrimMaterialData> trimMaterialsToAdd = new ArrayList<>();
 		for (MaterialConfiguration config : MATERIALS.get()) {
 			MaterialConfiguration concrete;
-			trimMaterialsToAdd.add(new ItemModelGenerators.TrimMaterialData(config.getMaterialAssetGroup(), config.getTrimMaterial()));
+			trimMaterialsToAdd.add(new TemuTrimMaterialData(config.getBaseName(), config.getTrimMaterial()));
 		}
 		TRIM_MATERIAL_MODELS.addAll(trimMaterialsToAdd);
 	}
 
 	public void generateTrimmableItemWithModdedMaterials(ItemModelGenerators geners, Item armor, ResourceKey<EquipmentAsset> equipmentAssetId, boolean hasDyedLayer) {
+		
 		String path = armor.getDescriptionId();
 		Identifier slotTrimPrefix = (path.contains("helmet")) ? TRIM_PREFIX_HELMET : ((path.contains("chestplate")) ? TRIM_PREFIX_CHESTPLATE : ((path.contains("leggings")) ? TRIM_PREFIX_LEGGINGS : ItemModelGenerators.TRIM_PREFIX_BOOTS));
 		Identifier modelLocation = ModelLocationUtils.getModelLocation(armor);
@@ -59,9 +59,9 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 		Material overlayTexture = TextureMapping.getItemTexture(armor, "_overlay");
 		List<SelectItemModel.SwitchCase<ResourceKey<TrimMaterial>>> cases = new ArrayList<>(TRIM_MATERIAL_MODELS.size());
 
-		for (ItemModelGenerators.TrimMaterialData material : TRIM_MATERIAL_MODELS) {
-			Identifier trimModelLocation = modelLocation.withSuffix("_" + material.assets().base().suffix() + "_trim");
-			Material trimOverlayTexture = new Material(slotTrimPrefix.withSuffix("_" + material.assets().assetId(equipmentAssetId).suffix()));
+		for (TemuTrimMaterialData material : TRIM_MATERIAL_MODELS) {
+			Identifier trimModelLocation = modelLocation.withSuffix("_" + material.materialName() + "_trim");
+			Material trimOverlayTexture = new Material(slotTrimPrefix.withSuffix("_" + material.materialName()));
 			ItemModel.Unbaked trimModel;
 			if (hasDyedLayer) {
 				geners.generateLayeredItem(trimModelLocation, itemTexture, overlayTexture, trimOverlayTexture);
@@ -71,7 +71,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 				trimModel = ItemModelUtils.plainModel(trimModelLocation);
 			}
 
-			cases.add(ItemModelUtils.when(material.materialKey(), trimModel));
+			cases.add(ItemModelUtils.when(material.material(), trimModel));
 		}
 
 		ItemModel.Unbaked untrimmedModel;
@@ -237,7 +237,7 @@ public class TEGMatLibModelProvider extends FabricModelProvider {
 		return switch (value) {
 			case CUBE -> TexturedModel.CUBE;
 			case CUBE_TOP -> TexturedModel.CUBE_TOP;
-			case CUBE_TOP_BOTTOM -> TexturedModel.CUBE_TOP_BOTTOM;
+			case CUBE_TOP_BOTTOM -> TexturedModel.CUBE_BOTTOM_TOP;
 			case COLUMN -> TexturedModel.COLUMN;
 		};
 	}

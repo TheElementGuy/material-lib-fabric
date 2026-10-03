@@ -1,17 +1,12 @@
 package com.github.theelementguy.tegmatlibf.util;
 
-import com.github.theelementguy.tegmatlibf.core.tier.MineabilityTier;
-import com.github.theelementguy.tegmatlibf.core.tier.MiningTier;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -19,7 +14,7 @@ import net.minecraft.world.item.equipment.EquipmentAsset;
 import net.minecraft.world.item.equipment.EquipmentAssets;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.NotNull;
 
@@ -118,8 +113,8 @@ public class TEGMatLibUtil {
 
 	}
 
-	public static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredFeatureResourceKey(String modId, String name) {
-		return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier.fromNamespaceAndPath(modId, name));
+	public static ResourceKey<Feature> createFeatureResourceKey(String modId, String name) {
+		return ResourceKey.create(Registries.FEATURE, Identifier.fromNamespaceAndPath(modId, name));
 	}
 
 	public static ResourceKey<PlacedFeature> createPlacedFeatureResourceKey(String modId, String name) {

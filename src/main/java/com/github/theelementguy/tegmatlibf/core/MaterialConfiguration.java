@@ -30,14 +30,13 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.trim.MaterialAssetGroup;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.BlockReplacement;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.NotNull;
@@ -80,7 +79,7 @@ public abstract class MaterialConfiguration {
 	protected final float SMELTING_EXPERIENCE;
 
 	protected Supplier<ResourceKey<@NotNull TrimMaterial>> TRIM_MATERIAL;
-	protected Supplier<MaterialAssetGroup> MATERIAL_ASSET_GROUP;
+	protected Supplier<Identifier> PALETTE;
 
 	protected final String TRIM_MATERIAL_DESCRIPTION_COLOR;
 
@@ -97,7 +96,7 @@ public abstract class MaterialConfiguration {
 	protected final Supplier<MapColor> MAP_COLOR;
 	protected final Supplier<SoundType> SOUND_TYPE;
 
-	protected OreGenHolder<ResourceKey<@NotNull ConfiguredFeature<?, ?>>> CONFIGURED_FEATURE_KEYS;
+	protected OreGenHolder<ResourceKey<@NotNull Feature>> CONFIGURED_FEATURE_KEYS;
 	protected OreGenHolder<ResourceKey<@NotNull PlacedFeature>> PLACED_FEATURE_KEYS;
 	protected final OreGenHolder<OreGenConfig> ORE_GEN_CONFIGS;
 
@@ -175,14 +174,14 @@ public abstract class MaterialConfiguration {
 	public abstract void fillBlocks();
 
 	public void fillConfiguredFeatureKeys() {
-		CONFIGURED_FEATURE_KEYS = new OreGenHolder<>((ORE_GEN_CONFIGS.hasSmall()) ? () -> TEGMatLibUtil.createConfiguredFeatureResourceKey(MOD_ID, "small_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasMedium()) ? () -> TEGMatLibUtil.createConfiguredFeatureResourceKey(MOD_ID, "medium_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasLarge()) ? () -> TEGMatLibUtil.createConfiguredFeatureResourceKey(MOD_ID, "large_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasExtra()) ? () -> TEGMatLibUtil.createConfiguredFeatureResourceKey(MOD_ID, "extra_" + BASE_NAME) : null);
+		CONFIGURED_FEATURE_KEYS = new OreGenHolder<>((ORE_GEN_CONFIGS.hasSmall()) ? () -> TEGMatLibUtil.createFeatureResourceKey(MOD_ID, "small_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasMedium()) ? () -> TEGMatLibUtil.createFeatureResourceKey(MOD_ID, "medium_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasLarge()) ? () -> TEGMatLibUtil.createFeatureResourceKey(MOD_ID, "large_" + BASE_NAME) : null, (ORE_GEN_CONFIGS.hasExtra()) ? () -> TEGMatLibUtil.createFeatureResourceKey(MOD_ID, "extra_" + BASE_NAME) : null);
 	}
 
 	public void fillPlacedFeatureKeys() {
 		PLACED_FEATURE_KEYS = new OreGenHolder<>((ORE_GEN_CONFIGS.hasSmall()) ? () -> TEGMatLibUtil.createPlacedFeatureResourceKey(MOD_ID, "small_" + BASE_NAME + "_ore_placed") : null, (ORE_GEN_CONFIGS.hasMedium()) ? () -> TEGMatLibUtil.createPlacedFeatureResourceKey(MOD_ID, "medium_" + BASE_NAME + "_ore_placed") : null, (ORE_GEN_CONFIGS.hasLarge()) ? () -> TEGMatLibUtil.createPlacedFeatureResourceKey(MOD_ID, "large_" + BASE_NAME + "_ore_placed") : null, (ORE_GEN_CONFIGS.hasExtra()) ? () -> TEGMatLibUtil.createPlacedFeatureResourceKey(MOD_ID, "extra_" + BASE_NAME + "_ore_placed") : null);
 	}
 
-	public abstract List<OreConfiguration.TargetBlockState> getOreStates();
+	public abstract List<BlockReplacement> getOreStates();
 
 	public void addConfiguredFeatureEntries(FabricDynamicRegistryProvider.Entries entries) {
 		ORE_GEN_CONFIGS.getSmall().ifPresent((oreConfig) -> {oreConfig.addConfiguredFeatureEntry(entries, getOreStates(), CONFIGURED_FEATURE_KEYS.getSmall().get());});
@@ -213,7 +212,7 @@ public abstract class MaterialConfiguration {
 		});
 	}
 
-	public void registerConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+	public void registerConfiguredFeatures(BootstrapContext<Feature> context) {
 		ORE_GEN_CONFIGS.getSmall().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getSmall().get());});
 		ORE_GEN_CONFIGS.getMedium().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getMedium().get());});
 		ORE_GEN_CONFIGS.getLarge().ifPresent((oreConfig) -> {oreConfig.registerConfiguredFeature(context, getOreStates(), CONFIGURED_FEATURE_KEYS.getLarge().get());});
@@ -246,7 +245,7 @@ public abstract class MaterialConfiguration {
 	}
 
 	protected Item registerAxe() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID), new AxeItem(TOOL_MATERIAL.get(), 6.0f, -3.1f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID), new Item(DEFAULT_PROPERTIES.get().axe(TOOL_MATERIAL.get(), 6.0f, -3.1f).setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_axe", MOD_ID))));
 	}
 
 	protected Item registerPickaxe() {
@@ -254,11 +253,11 @@ public abstract class MaterialConfiguration {
 	}
 
 	protected Item registerShovel() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID), new ShovelItem(TOOL_MATERIAL.get(), 1.5f, -3f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID), new Item(DEFAULT_PROPERTIES.get().shovel(TOOL_MATERIAL.get(), 1.5f, -3f).setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_shovel", MOD_ID))));
 	}
 
 	protected Item registerHoe() {
-		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID), new HoeItem(TOOL_MATERIAL.get(), -2f, -1f, DEFAULT_PROPERTIES.get().setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID))));
+		return Registry.register(BuiltInRegistries.ITEM, TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID), new Item(DEFAULT_PROPERTIES.get().hoe(TOOL_MATERIAL.get(), -2f, -1f).setId(TEGMatLibUtil.createItemResourceKey(BASE_NAME + "_hoe", MOD_ID))));
 	}
 
 	protected Item registerSpear() {
@@ -392,20 +391,20 @@ public abstract class MaterialConfiguration {
 	}
 
 	public void bootstrapTrimMaterial(BootstrapContext<TrimMaterial> context) {
-		context.register(TRIM_MATERIAL.get(), new TrimMaterial(MATERIAL_ASSET_GROUP.get(), Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().identifier())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow()))));
+		context.register(TRIM_MATERIAL.get(), new TrimMaterial(PALETTE.get(), Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().identifier())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow()))));
 	}
 
 	public void addTrimMaterialEntry(FabricDynamicRegistryProvider.Entries entries) {
-		entries.add(TRIM_MATERIAL.get(), new TrimMaterial(MATERIAL_ASSET_GROUP.get(), Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().identifier())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow()))));
+		entries.add(TRIM_MATERIAL.get(), new TrimMaterial(PALETTE.get(), Component.translatable(Util.makeDescriptionId("trim_material", TRIM_MATERIAL.get().identifier())).withStyle(Style.EMPTY.withColor(TextColor.parseColor(TRIM_MATERIAL_DESCRIPTION_COLOR).getOrThrow()))));
 	}
 
 	public void fillTrimMaterialKeys() {
 		TRIM_MATERIAL = () -> TEGMatLibUtil.createTrimMaterialResourceKey(BASE_NAME, MOD_ID);
-		MATERIAL_ASSET_GROUP = () -> MaterialAssetGroup.create(BASE_NAME);
+		PALETTE = () -> Identifier.fromNamespaceAndPath(MOD_ID, "trim/" + BASE_NAME);
 	}
 
-	public MaterialAssetGroup getMaterialAssetGroup() {
-		return MATERIAL_ASSET_GROUP.get();
+	public Identifier getPalette() {
+		return PALETTE.get();
 	}
 
 	public ResourceKey<TrimMaterial> getTrimMaterial() {

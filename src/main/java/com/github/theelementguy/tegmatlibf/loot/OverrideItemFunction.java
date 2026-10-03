@@ -10,12 +10,13 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OverrideItemFunction extends LootItemConditionalFunction {
 
-	private final Holder<Item> item;
+	private final Holder<@NotNull Item> item;
 
-	private OverrideItemFunction(List<LootItemCondition> predicates, Item item) {
+	private OverrideItemFunction(Optional<@NotNull Holder<@NotNull LootItemCondition>> predicates, Item item) {
 		super(predicates);
 		this.item = Holder.direct(item);
 	}

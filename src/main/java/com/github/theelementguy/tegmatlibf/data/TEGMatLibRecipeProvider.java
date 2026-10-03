@@ -3,11 +3,13 @@ package com.github.theelementguy.tegmatlibf.data;
 import com.github.theelementguy.tegmatlibf.core.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
@@ -33,9 +35,8 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 	}
 
 	@Override
-	protected @NotNull RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-
-		return new RecipeProvider(registries, output) {
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, BootstrapContext<Recipe<?>> bootstrapContext, BootstrapContext<Advancement> bootstrapContext1) {
+		return new RecipeProvider(bootstrapContext, bootstrapContext1) {
 			@Override
 			public void buildRecipes() {
 				for (MaterialConfiguration config : MATERIALS.get()) {
@@ -164,10 +165,7 @@ public class TEGMatLibRecipeProvider extends FabricRecipeProvider {
 				oreBlasting(smeltables, RecipeCategory.MISC, material, experience, 100, group);
 			}
 		};
-
 	}
-
-
 
 	@Override
 	public String getName() {

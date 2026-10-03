@@ -30,7 +30,7 @@ public class TEGMatLibDynamicRegistryProvider extends FabricDynamicRegistryProvi
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, Entries entries) {
-		entries.addAll(registries.lookupOrThrow(Registries.CONFIGURED_FEATURE));
+		entries.addAll(registries.lookupOrThrow(Registries.FEATURE));
 		entries.addAll(registries.lookupOrThrow(Registries.PLACED_FEATURE));
 		entries.addAll(registries.lookupOrThrow(Registries.TRIM_MATERIAL));
 	}

@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.BlockReplacement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
 import net.minecraft.world.level.material.MapColor;
 
@@ -44,8 +44,8 @@ public class EndDiamondTypeMaterialConfiguration extends MaterialConfiguration {
 	}
 
 	@Override
-	public List<OreConfiguration.TargetBlockState> getOreStates() {
-		return List.of(OreConfiguration.target(new BlockMatchTest(Blocks.END_STONE), END_ORE_BLOCK.defaultBlockState()));
+	public List<BlockReplacement> getOreStates() {
+		return List.of(BlockReplacement.replace(new BlockMatchTest(Blocks.END_STONE), END_ORE_BLOCK.defaultBlockState()));
 	}
 
 	@Override

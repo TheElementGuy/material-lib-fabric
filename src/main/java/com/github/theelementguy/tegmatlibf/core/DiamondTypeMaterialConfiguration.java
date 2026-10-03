@@ -12,7 +12,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.BlockReplacement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraft.world.level.material.MapColor;
 
@@ -46,8 +46,8 @@ public class DiamondTypeMaterialConfiguration extends MaterialConfiguration {
 	}
 
 	@Override
-	public List<OreConfiguration.TargetBlockState> getOreStates() {
-		return List.of(OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), ORE_BLOCK.defaultBlockState()), OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), DEEPSLATE_ORE_BLOCK.defaultBlockState()));
+	public List<BlockReplacement> getOreStates() {
+		return List.of(BlockReplacement.replace(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), ORE_BLOCK.defaultBlockState()), BlockReplacement.replace(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), DEEPSLATE_ORE_BLOCK.defaultBlockState()));
 	}
 
 	@Override
